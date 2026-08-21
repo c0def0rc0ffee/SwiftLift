@@ -1,0 +1,1681 @@
+:root {
+  --bg: #1a1a1a;
+  --panel: #242424;
+  --panel-2: #2f2f2f;
+  --panel-3: #3a3a3a;
+  --input-bg: #161616;
+  --text: #ececec;
+  --muted: #9a9a9a;
+  --accent: #6ec546;
+  --accent-2: #8fd66a;
+  --accent-ink: #0e1a08;
+  --offer: #6ec546;
+  --request: #f5b942;
+  --danger: #e56b6b;
+  --border: #3a3a3a;
+  font-family: "Red Hat Display", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--text); }
+
+.splash { display: grid; place-items: center; height: 100%; color: var(--muted); }
+
+/* ---------- Auth ---------- */
+.auth {
+  position: relative; display: grid; place-items: center;
+  min-height: 100%; padding: 2rem 1.25rem;
+  overflow: hidden;
+}
+.auth-bg {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(70% 50% at 25% 20%, rgba(110,197,70,.18), transparent 60%),
+    radial-gradient(60% 40% at 80% 80%, rgba(143,214,106,.12), transparent 60%),
+    radial-gradient(60% 50% at 100% 0%, rgba(47,101,23,.20), transparent 60%);
+}
+.auth-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  /* a faint dotted texture so the background isn't dead flat */
+  background-image: radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 18px 18px;
+  opacity: .5;
+}
+
+.auth-card {
+  position: relative; z-index: 1;
+  background: linear-gradient(180deg, rgba(36,36,36,.95) 0%, rgba(26,26,26,.95) 100%);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.75rem 1.6rem 1.4rem;
+  width: 100%; max-width: 400px;
+  display: flex; flex-direction: column; gap: .85rem;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.05) inset,
+    0 24px 60px rgba(0,0,0,.55),
+    0 0 0 1px rgba(110,197,70,.05);
+  backdrop-filter: blur(6px);
+}
+.auth-card::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: 10px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(110,197,70,.35), transparent 25%);
+  mask-image: linear-gradient(180deg, black 0, transparent 25%);
+  -webkit-mask-image: linear-gradient(180deg, black 0, transparent 25%);
+  opacity: .4;
+}
+
+.auth-brand {
+  display: flex; align-items: center; gap: .9rem;
+  margin-bottom: .35rem;
+}
+/* The BrandMark gradient tile already draws its own rounded dark-green
+   square, the wrapper just sizes it. No glow, no inset highlight: those
+   were fighting the card's own colour and making the tile look pasted-on
+   rather than part of the brand strip. */
+.auth-mark {
+  width: 56px; height: 56px; flex-shrink: 0;
+}
+.auth-mark svg { width: 100%; height: 100%; display: block; }
+.auth-wordmark h1 {
+  margin: 0; font-size: 1.85rem; line-height: 1.1;
+  font-family: "Baumans", "Red Hat Display", sans-serif;
+  font-weight: 400; letter-spacing: 0;
+  background: linear-gradient(90deg, #ffffff 0%, var(--accent-2) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.auth-wordmark p { margin: .15rem 0 0; font-size: .85rem; }
+
+/* Sign-in / New-account tab pair */
+.auth-tabs {
+  display: flex; gap: .25rem;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: .2rem;
+  margin: .3rem 0 .15rem;
+}
+.auth-tab {
+  flex: 1; background: transparent; color: var(--muted); border: 0;
+  padding: .5rem .8rem; border-radius: 4px; font: inherit; font-weight: 600;
+  cursor: pointer; transition: background .15s, color .15s;
+}
+.auth-tab.on {
+  background: var(--panel-2); color: var(--text);
+  box-shadow: 0 1px 0 rgba(255,255,255,.05) inset;
+}
+
+.auth-fields { display: flex; flex-direction: column; gap: .65rem; margin-top: .25rem; }
+.auth-card label {
+  display: flex; flex-direction: column; gap: .3rem;
+  font-size: .8rem; color: var(--muted); letter-spacing: .01em;
+}
+.auth-card input, .auth-card select {
+  background: var(--input-bg); color: var(--text); border: 1px solid var(--border);
+  padding: .65rem .8rem; border-radius: 4px; font: inherit;
+  transition: border-color .15s, box-shadow .15s;
+}
+.auth-card input:focus, .auth-card select:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(110,197,70,.15);
+}
+
+/* 18+ confirmation row on the register form. flex-row not column,
+   checkbox to the left, text wraps to the right of it. */
+.auth-card label.auth-adult-check {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: .55rem;
+  font-size: .8rem;
+  line-height: 1.4;
+  color: var(--muted);
+  cursor: pointer;
+  margin-top: .25rem;
+}
+.auth-card label.auth-adult-check input[type="checkbox"] {
+  width: 1rem; height: 1rem; margin-top: .15rem;
+  accent-color: var(--accent);
+  flex: 0 0 auto;
+}
+.auth-card label.auth-adult-check .link.inline { font-size: inherit; }
+
+.auth-submit {
+  margin-top: .5rem;
+  background: linear-gradient(180deg, var(--accent-2) 0%, var(--accent) 60%, #2f6517 130%);
+  color: var(--accent-ink); border: 0;
+  padding: .8rem 1rem; border-radius: 5px; font-weight: 800;
+  cursor: pointer; font-size: 1rem; letter-spacing: .01em;
+  box-shadow: 0 6px 18px rgba(110,197,70,.30), 0 1px 0 rgba(255,255,255,.25) inset;
+  transition: transform .05s, filter .15s;
+}
+.auth-submit:hover { filter: brightness(1.06); }
+.auth-submit:active { transform: translateY(1px); }
+.auth-submit:disabled { opacity: .7; cursor: wait; }
+
+.auth-forgot { align-self: center; font-size: .8rem; }
+
+/* Divider between password form and OAuth button */
+.auth-or {
+  display: flex; align-items: center; gap: .5rem;
+  color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .12em;
+  margin: .25rem 0;
+}
+.auth-or::before, .auth-or::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.auth-or span { padding: 0 .25rem; }
+
+.auth-fb {
+  display: flex; align-items: center; justify-content: center; gap: .55rem;
+  background: #1877f2; color: white; text-decoration: none;
+  padding: .7rem 1rem; border-radius: 5px; font-weight: 700; font-size: .95rem;
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 4px 14px rgba(24,119,242,.30), 0 1px 0 rgba(255,255,255,.18) inset;
+  transition: filter .15s, transform .05s;
+}
+.auth-fb:hover  { filter: brightness(1.08); }
+.auth-fb:active { transform: translateY(1px); }
+.auth-fb svg    { flex-shrink: 0; }
+
+/* Google sign-in, Google's branding guidelines call for white background +
+   dark text, so we deliberately break from the dark theme here. The button
+   sits between FB and the form; spacing comes from the parent form's gap. */
+.auth-google {
+  display: flex; align-items: center; justify-content: center; gap: .55rem;
+  background: #ffffff; color: #1f1f1f; text-decoration: none;
+  padding: .7rem 1rem; border-radius: 5px; font-weight: 600; font-size: .95rem;
+  border: 1px solid #dadce0;
+  box-shadow: 0 1px 2px rgba(0,0,0,.20);
+  transition: background .15s, transform .05s;
+}
+.auth-google:hover  { background: #f8f9fa; }
+.auth-google:active { transform: translateY(1px); }
+.auth-google svg    { flex-shrink: 0; }
+.auth-google + .auth-fb { margin-top: .5rem; }
+.auth-foot {
+  text-align: center; margin-top: .35rem; font-size: .78rem; color: var(--muted);
+  border-top: 1px solid var(--border); padding-top: .65rem;
+}
+/* Small version tag at the very bottom of the auth card. */
+.auth-version {
+  text-align: center; margin-top: .5rem;
+  font-size: .68rem; letter-spacing: .05em;
+}
+
+.error { background: rgba(229,107,107,.12); color: #f4b8b8; border: 1px solid rgba(229,107,107,.35); padding: .5rem .7rem; border-radius: 4px; font-size: .875rem; }
+.muted { color: var(--muted); }
+
+/* ---------- App shell ---------- */
+.app {
+  display: grid;
+  grid-template-rows: 56px 1fr auto;  /* appbar | body | footer */
+  height: 100%;
+  position: relative;
+}
+.app-body {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  min-height: 0;
+}
+
+/* ---------- App footer ---------- */
+.app-footer {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .35rem .9rem;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  font-size: .72rem; color: var(--muted);
+  z-index: 1400;
+}
+.app-footer-brand {
+  font-family: "Baumans", "Red Hat Display", sans-serif;
+  letter-spacing: .02em;
+  color: var(--muted);
+}
+.app-footer-spacer { flex: 1; }
+.app-footer-links {
+  display: flex; align-items: center; gap: .35rem;
+}
+.app-footer-links .link {
+  background: transparent; border: 0; padding: 0; cursor: pointer;
+  color: var(--muted); text-decoration: underline; text-decoration-color: rgba(154,154,154,.4);
+  text-underline-offset: 2px;
+  font: inherit;
+}
+.app-footer-links .link:hover { color: var(--accent-2); text-decoration-color: var(--accent-2); }
+.app-footer-links .dot { opacity: .6; }
+
+/* ---------- Confirm modal ---------- */
+.confirm-modal { display: flex; flex-direction: column; gap: 1rem; }
+.confirm-message { line-height: 1.45; }
+.confirm-actions { justify-content: flex-end; padding-top: .25rem; }
+.confirm-actions button {
+  background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+  padding: .55rem .9rem; border-radius: 4px; cursor: pointer; font: inherit;
+}
+.confirm-actions button.primary {
+  background: var(--accent); border-color: var(--accent);
+  color: var(--accent-ink); font-weight: 700;
+}
+.confirm-actions button.danger {
+  background: var(--danger); border-color: var(--danger);
+  color: #1a0606; font-weight: 700;
+}
+.confirm-actions button:hover { filter: brightness(1.08); }
+.sidebar {
+  background: var(--panel); border-right: 1px solid var(--border);
+  padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem;
+  min-width: 0;
+}
+
+/* ---------- App bar ---------- */
+.appbar {
+  display: flex; align-items: center; gap: .5rem;
+  padding: 0 .75rem;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  position: relative; z-index: 1500;
+}
+.appbar-brand {
+  display: flex; align-items: center; gap: .5rem;
+  background: transparent; color: var(--text); border: 0;
+  font-weight: 700; font-size: 1.1rem; cursor: pointer;
+  padding: .25rem .5rem; border-radius: 4px;
+}
+.appbar-brand .brand-text {
+  font-family: "Baumans", "Red Hat Display", sans-serif;
+  font-weight: 400;        /* Baumans only ships one weight */
+  font-size: 1.3rem;       /* Baumans's character only reads above ~20px */
+  letter-spacing: .02em;
+  line-height: 1;
+}
+.appbar-brand:hover { background: var(--panel-2); }
+/* Brand pin in the AppBar, drawn directly on the dark panel, no tile.
+   currentColor = --accent so it picks up the brand green; the SVG fills
+   with that. Width slightly less than height because the pin's natural
+   aspect ratio is 547:630 ≈ 0.87. */
+.brand-mark {
+  display: grid; place-items: center;
+  width: 28px; height: 32px;
+  color: var(--accent);
+}
+.brand-mark svg { width: 100%; height: 100%; display: block; }
+.appbar-spacer { flex: 1; }
+
+/* Primary nav items sit immediately after the brand. Pill-shaped
+   text+icon buttons on desktop; on phones the labels disappear via
+   the media query at the bottom of this file and the buttons collapse
+   to plain icons. */
+.appbar-nav { display: flex; gap: .35rem; align-items: center; }
+.appbar-nav-item {
+  background: transparent; color: var(--text); border: 1px solid var(--border);
+  height: 36px; border-radius: 4px; cursor: pointer;
+  padding: 0 .65rem 0 .5rem;
+  display: inline-flex; align-items: center; gap: .4rem;
+  font: inherit; font-size: .9rem; font-weight: 500;
+  position: relative;
+}
+.appbar-nav-item:hover { background: var(--panel-2); }
+.appbar-nav-item.active { background: var(--panel-2); border-color: var(--accent); }
+.appbar-nav-label { line-height: 1; }
+
+.appbar-burger {
+  background: transparent; color: var(--text); border: 1px solid var(--border);
+  width: 36px; height: 36px; border-radius: 4px; cursor: pointer;
+  display: none; place-items: center; font-size: 1.05rem;
+}
+
+.appbar-icon {
+  background: transparent; color: var(--text); border: 1px solid var(--border);
+  width: 36px; height: 36px; border-radius: 4px; cursor: pointer;
+  display: grid; place-items: center; font-size: .95rem;
+  position: relative;
+}
+.appbar-icon:hover { background: var(--panel-2); }
+
+.appbar-badge {
+  position: absolute; top: -4px; right: -4px;
+  background: var(--danger); color: white;
+  font-size: .65rem; font-weight: 700;
+  min-width: 18px; height: 18px; padding: 0 5px;
+  border-radius: 999px; display: grid; place-items: center;
+  border: 2px solid var(--panel);
+}
+
+.appbar-profile {
+  display: flex; align-items: center; gap: .5rem;
+  background: transparent; color: var(--text); border: 1px solid transparent;
+  padding: .2rem .55rem .2rem .25rem; border-radius: 4px; cursor: pointer;
+  font: inherit;
+}
+.appbar-profile:hover { background: var(--panel-2); }
+.appbar-profile.active {
+  background: var(--panel-2); border-color: var(--accent);
+}
+.appbar-profile-name {
+  display: flex; align-items: center; gap: .35rem; font-weight: 600; font-size: .9rem;
+}
+.away-pill.compact { font-size: .55rem; padding: .05rem .3rem; }
+
+/* ---------- Notifications dropdown ---------- */
+.appbar-notif { position: relative; }
+.notif-menu {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  width: 320px; max-height: 70vh; overflow-y: auto;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 6px; padding: .65rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,.45);
+}
+.notif-menu-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: .35rem;
+}
+.notif-menu-head h3 {
+  margin: 0; font-size: .8rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted);
+}
+.notif-menu section { margin-top: .5rem; }
+.notif-menu section h4 {
+  margin: .35rem 0 .25rem; font-size: .7rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .1em;
+}
+.notif-row {
+  display: flex; gap: .55rem; align-items: flex-start;
+  background: var(--panel-2); border: 1px solid transparent; color: var(--text);
+  padding: .45rem .55rem; border-radius: 4px; cursor: pointer;
+  width: 100%; text-align: left; font: inherit; margin-bottom: .25rem;
+}
+.notif-row:hover { background: var(--panel-3); border-color: var(--border); }
+.notif-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .15rem; }
+.notif-title { display: flex; align-items: center; gap: .4rem; }
+.notif-empty { padding: .4rem .25rem; }
+
+/* ---------- Profile page ---------- */
+.page {
+  overflow-y: auto; padding: 1rem 1.25rem 2rem;
+}
+.page-inner {
+  max-width: 960px; margin: 0 auto;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.5rem;
+}
+@media (min-width: 720px) {
+  .profile-page .profile-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .profile-page .profile-form > section { margin: 0; }
+  .profile-page .profile-form > .page-actions {
+    grid-column: 1 / -1; margin-top: .5rem;
+  }
+  .profile-page .danger-zone { max-width: 560px; }
+}
+.page-header {
+  display: flex; flex-direction: column; gap: .75rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: .75rem; margin-bottom: 1rem;
+}
+.page-title { display: flex; align-items: center; gap: .85rem; }
+.page-title h1 { margin: 0; font-size: 1.15rem; }
+.page-actions {
+  display: flex; gap: .5rem; flex-wrap: wrap;
+  margin-top: .5rem;
+}
+.page-actions button {
+  background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+  padding: .55rem .9rem; border-radius: 4px; cursor: pointer;
+}
+.page-actions button.primary {
+  background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 700;
+}
+.page-actions button:disabled { opacity: .5; cursor: not-allowed; }
+
+.app.view-profile .app-body { display: none; }
+
+/* Install hint inside the notifications dropdown, same shape as a notif row,
+   but with a download glyph instead of an avatar and inline action buttons. */
+.notif-row.install-hint {
+  cursor: default; align-items: flex-start;
+}
+.notif-row.install-hint:hover { background: var(--panel-2); }
+.install-hint-icon {
+  width: 32px; height: 32px; flex-shrink: 0;
+  display: grid; place-items: center;
+  background: rgba(110,197,70,.15); color: var(--accent-2);
+  border-radius: 50%;
+}
+.install-hint-icon svg { width: 18px; height: 18px; }
+.install-hint-actions {
+  display: flex; gap: .35rem; margin-top: .4rem;
+}
+
+/* ---------- Legal page ---------- */
+/* The About page reuses the .legal article styles for its body copy
+   (same readable line-length and font size). Grouping the selectors
+   here keeps the legal + about pages visually consistent, if one
+   gets a typographic tweak, so does the other. */
+.legal-page .legal h2,
+.about-page .legal h2 { margin: 1.5rem 0 .5rem; font-size: 1.05rem; }
+.about-page .legal h2:first-child { margin-top: 0; }
+.about-page .legal h3,
+.legal-page .legal h3 {
+  margin: 1rem 0 .35rem; font-size: .95rem;
+  color: var(--accent-2); font-weight: 700;
+}
+.legal-page .legal p,
+.legal-page .legal li,
+.about-page .legal p,
+.about-page .legal li { line-height: 1.55; }
+.legal-page .legal ul,
+.about-page .legal ul { margin: .25rem 0 .5rem; padding-left: 1.25rem; }
+.legal-page .legal,
+.about-page .legal { font-size: .92rem; color: var(--text); }
+.legal-page .legal .privacy-lede {
+  background: rgba(120, 200, 120, 0.08);
+  border-left: 3px solid var(--accent, #6cba6c);
+  padding: .75rem 1rem;
+  margin: 0 0 1rem;
+  border-radius: 4px;
+}
+/* The lede holds 2-3 short intro paragraphs. Default <p> margins would
+   leave too much air inside the callout, tighten them so the block
+   reads as a single tight intro, not a spread-out section. */
+.legal-page .legal .privacy-lede p { margin: .25rem 0; }
+.legal-page .legal .privacy-lede p:first-child { margin-top: 0; }
+.legal-page .legal .privacy-lede p:last-child  { margin-bottom: 0; }
+
+/* Login extras */
+.auth-fineprint { text-align: center; line-height: 1.4; }
+button.link.inline { display: inline; padding: 0; }
+
+/* Verify banner + toast */
+.verify-banner {
+  position: relative;
+  background: rgba(245,185,66,.12); color: var(--request);
+  border: 1px solid rgba(245,185,66,.4);
+  padding: .55rem 1.6rem .55rem .7rem; border-radius: 4px;
+  display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+  font-size: .825rem;
+}
+.verify-banner-close {
+  position: absolute; top: .15rem; right: .25rem;
+  background: transparent; border: 0; color: inherit;
+  font-size: 1.1rem; line-height: 1; padding: .15rem .35rem;
+  cursor: pointer; opacity: .65;
+}
+.verify-banner-close:hover { opacity: 1; }
+.toast {
+  position: fixed; bottom: 1rem; right: 1rem; z-index: 3000;
+  padding: .65rem .9rem; border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.5);
+  cursor: pointer; max-width: 90vw;
+}
+.toast.ok    { background: rgba(110,197,70,.95); color: var(--accent-ink); }
+.toast.error { background: rgba(229,107,107,.95); color: #2a0a0a; }
+
+/* "Journey saved" toast (and any other transient OK confirmation that
+   auto-dismisses). Fades in fast, holds, then fades out, total runtime
+   matches the 2200 ms auto-dismiss timer in RideApp so the visual ends
+   right as the element unmounts. */
+@keyframes toast-fade-out {
+  0%   { opacity: 0; transform: translateY(8px); }
+  10%  { opacity: 1; transform: translateY(0); }
+  80%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(8px); }
+}
+.toast.save-toast { animation: toast-fade-out 2.2s ease-in-out forwards; }
+
+/* Block / report */
+.danger-link { color: var(--danger) !important; }
+
+.confirm-pair { display: inline-flex; gap: .35rem; align-items: center; }
+
+/* Skeleton shimmer */
+.skeleton {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--panel-2) 0%, var(--panel-3) 50%, var(--panel-2) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s linear infinite;
+  vertical-align: middle;
+}
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton-card { padding: .55rem .65rem; opacity: .85; }
+.skeleton-card .journey-card-head { background: transparent !important; cursor: default !important; }
+.skeleton-card .journey-card-title { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.sidebar header { display: flex; flex-direction: column; gap: .5rem; }
+.brand { font-weight: 700; font-size: 1.25rem; letter-spacing: -.01em; }
+
+
+.away-pill {
+  font-size: .65rem; padding: .1rem .4rem; border-radius: 999px;
+  background: rgba(245,185,66,.2); color: var(--request);
+  font-weight: 700; letter-spacing: .05em;
+}
+
+/* Shown in place of the matches list (JourneyCard + MatchesModal) when the
+   user has Away mode on. The amber background matches the AWAY pill in the
+   appbar so it reads as "informational, your doing", not "error". The body
+   ends with a button that jumps the user straight into Profile where the
+   Away toggle lives. */
+.away-notice {
+  display: flex; gap: .65rem; align-items: flex-start;
+  padding: .75rem .8rem; border-radius: 6px;
+  background: rgba(245,185,66,.08);
+  border: 1px solid rgba(245,185,66,.35);
+}
+.away-notice .away-pill { flex-shrink: 0; margin-top: .15rem; }
+.away-notice-body { display: flex; flex-direction: column; gap: .35rem; }
+.away-notice-body strong { font-size: .95rem; }
+.away-notice-body p { margin: 0; }
+.away-notice-body button { align-self: flex-start; margin-top: .15rem; }
+
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: grid; place-items: center; font-weight: 700; overflow: hidden;
+  object-fit: cover; background: var(--panel-2);
+}
+.avatar-fallback { user-select: none; }
+
+button.primary {
+  background: var(--accent); color: var(--accent-ink); border: 0; padding: .6rem .9rem;
+  border-radius: 4px; cursor: pointer; font-weight: 700;
+}
+button.primary:disabled { opacity: .5; cursor: not-allowed; }
+
+button.link {
+  background: none; border: 0; color: var(--accent-2); cursor: pointer;
+  padding: 0; font: inherit; text-decoration: underline;
+}
+
+/* ---------- Journey cards (collapsible) ---------- */
+.journey-cards { display: flex; flex-direction: column; gap: .4rem; }
+.journey-card {
+  background: var(--panel-2); border: 1px solid transparent; border-radius: 6px;
+  overflow: hidden;
+  transition: border-color .15s;
+}
+.journey-card.open { border-color: var(--accent); }
+.journey-card.has-attention { border-color: var(--accent-2); }
+.journey-card.hidden-journey { border-color: rgba(229,107,107,.45); opacity: .75; }
+.journey-card.hidden-journey.open { border-color: var(--danger); opacity: 1; }
+.journeys li.hidden-journey { border-left: 3px solid rgba(229,107,107,.45); }
+.pill.hidden-pill { background: rgba(229,107,107,.18); color: var(--danger); font-size: .65rem; }
+
+.journey-card-head {
+  width: 100%; background: none; border: 0; color: var(--text);
+  padding: .65rem .8rem; cursor: pointer;
+  display: flex; align-items: center; gap: .5rem;
+  text-align: left;
+}
+.journey-card-head:hover { background: rgba(255,255,255,.03); }
+.journey-card-title { flex: 1; min-width: 0; }
+.journey-card-next {
+  font-size: .85rem; color: var(--accent-2); font-weight: 600;
+  letter-spacing: .01em; margin-top: .15rem;
+}
+.journey-card-meta { color: var(--muted); font-size: .75rem; margin-top: .1rem; }
+.journey-card-meta code { color: var(--muted); letter-spacing: .15em; }
+.journey-card-side { display: flex; align-items: center; gap: .35rem; }
+.chev {
+  color: var(--muted); transition: transform .15s ease;
+  font-size: .9rem; line-height: 1;
+}
+.chev.open { transform: rotate(180deg); }
+.badge.attention { background: var(--accent-2); color: var(--accent-ink); }
+
+.journey-card-body {
+  padding: .25rem .8rem .8rem;
+  border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: .65rem;
+}
+.journey-card-tags {
+  display: flex; align-items: center; gap: .5rem;
+  padding-top: .5rem; flex-wrap: wrap;
+}
+/* Driver-side anonymised demand note (shown instead of a browsable list). */
+.demand-note {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 6px; padding: .6rem .75rem;
+}
+.demand-note p { margin: 0; }
+.demand-note b { color: var(--accent-2); }
+/* Owner-only actions (Edit / Delete) sit on their own row so the layout
+   stays consistent regardless of whether the info row above includes a
+   seats pill or a "pickup with X" line. */
+.journey-card-actions {
+  display: flex; align-items: center; gap: .5rem;
+}
+
+.card-section { display: flex; flex-direction: column; gap: .35rem; }
+.card-section h4 {
+  margin: .25rem 0 0; font-size: .7rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .12em; font-weight: 600;
+}
+
+/* Seats + vehicle chips */
+.pill.seats {
+  background: rgba(143,214,106,.15); color: var(--accent-2);
+  letter-spacing: .04em;
+}
+.pill.seats.full { background: rgba(229,107,107,.15); color: var(--danger); }
+
+.vehicle-info { display: flex; flex-wrap: wrap; gap: .25rem; margin-top: .15rem; }
+.veh-chip {
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border);
+  padding: .1rem .45rem; border-radius: 999px;
+  font-size: .7rem; color: var(--text);
+}
+
+.error-text { color: var(--danger); }
+/* Caution (not an error): e.g. a match that only covers some of your days. */
+.warn-text { color: var(--request); }
+
+.last-message {
+  background: rgba(255,255,255,.04);
+  padding: .3rem .5rem; border-radius: 4px;
+  font-style: italic;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ---------- Message thread ---------- */
+/* The thread now lives inside the fixed-height MessagesModal pane, so it
+   should grow to fill that pane: scroll list expands, compose pinned at
+   the bottom. flex:1 + min-height:0 lets the inner scroll area shrink. */
+.thread {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 4px;
+  margin-top: .5rem; padding: .5rem;
+  display: flex; flex-direction: column; gap: .4rem;
+  flex: 1; min-height: 0;
+}
+.thread-scroll {
+  flex: 1; min-height: 0; overflow-y: auto;
+  display: flex; flex-direction: column; gap: .35rem;
+  padding-right: .25rem;
+}
+.bubble {
+  max-width: 85%;
+  padding: .4rem .6rem; border-radius: 8px;
+  font-size: .85rem; line-height: 1.3;
+  word-wrap: break-word;
+}
+.bubble-body { white-space: pre-wrap; }
+.bubble-meta { font-size: .65rem; opacity: .55; margin-top: .15rem; text-align: right; }
+.bubble.mine {
+  background: var(--accent); color: var(--accent-ink);
+  border-bottom-right-radius: 3px; align-self: flex-end;
+}
+.bubble.theirs {
+  background: var(--panel-2); color: var(--text);
+  border-bottom-left-radius: 3px; align-self: flex-start;
+}
+
+/* System notice in a chat thread (e.g. "driver moved the pickup pin").
+   Centred, italic, no bubble, clearly distinct from typed chat. */
+.thread-system-notice {
+  align-self: stretch;
+  text-align: center;
+  font-style: italic;
+  color: var(--muted);
+  background: rgba(120, 200, 120, 0.08);
+  border-left: 2px solid var(--accent, #6cba6c);
+  border-right: 2px solid var(--accent, #6cba6c);
+  padding: .4rem .65rem;
+  border-radius: 4px;
+  font-size: .82rem;
+  line-height: 1.35;
+  margin: .2rem 0;
+}
+.thread-system-body { white-space: pre-wrap; }
+.thread-system-meta { font-size: .65rem; opacity: .55; margin-top: .15rem; }
+
+.thread-compose {
+  display: flex; flex-direction: column; gap: .25rem;
+  border-top: 1px solid var(--border); padding-top: .35rem;
+}
+.thread-compose textarea {
+  background: var(--input-bg); color: var(--text); border: 1px solid var(--border);
+  padding: .4rem .55rem; border-radius: 4px; font: inherit; font-size: .85rem;
+  resize: vertical;
+}
+.thread-compose-foot {
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.journey-card-footer {
+  padding: 0 .8rem .55rem;
+  border-top: 1px dashed var(--border);
+  padding-top: .35rem;
+}
+.row-top { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+.pill {
+  font-size: .7rem; padding: .1rem .45rem; border-radius: 999px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.pill.offer   { background: rgba(110,197,70,.15);  color: var(--offer); }
+.pill.request { background: rgba(245,185,66,.15);  color: var(--request); }
+
+button.icon {
+  background: transparent; border: 1px solid var(--border); color: var(--muted);
+  width: 32px; border-radius: 4px; cursor: pointer;
+}
+button.icon:hover { color: var(--danger); border-color: var(--danger); }
+
+.empty { color: var(--muted); font-size: .875rem; line-height: 1.5; display: flex; flex-direction: column; gap: .35rem; align-items: flex-start; }
+.empty-headline { color: var(--text); font-weight: 600; font-size: .95rem; }
+.empty-body { line-height: 1.4; }
+.search-meta { font-weight: 400; text-transform: none; letter-spacing: 0; }
+.expand-search { align-self: flex-start; margin-top: .35rem; }
+
+/* ---------- Matches ---------- */
+.matches h2 { font-size: .9rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: .5rem 0; }
+.matches ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .35rem; }
+.matches li { background: var(--panel-2); padding: .55rem .7rem; border-radius: 4px; }
+.small { font-size: .75rem; }
+
+/* ---------- Map + editor ---------- */
+.map-wrap { position: relative; }
+.map { height: 100%; width: 100%; background: var(--bg); }
+
+/* Dark-friendly Leaflet controls */
+.leaflet-bar, .leaflet-bar a {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.leaflet-bar a:hover { background: var(--panel-2) !important; }
+.leaflet-control-attribution {
+  background: rgba(36, 36, 36, .7) !important;
+  color: var(--muted) !important;
+}
+.leaflet-control-attribution a { color: var(--accent-2) !important; }
+
+/* Hide Leaflet's zoom controls and the basemap toggle while the journey
+   editor is on screen. They sit in the corners of the map and would
+   otherwise poke out from behind the editor sheet (especially on
+   narrow desktop widths where the editor spans the full map height).
+   Pinch zoom on touch and double-click zoom on desktop still work; the
+   user just loses the +/- buttons for the duration of the edit.
+   `:has()` is the modern path; `.editing` is the manual fallback for
+   older browsers and is what RideApp toggles on the wrapper. */
+.map-wrap.editing .leaflet-control-container,
+.map-wrap.editing .basemap-toggle,
+.map-wrap.editing .map-version,
+.map-wrap:has(.editor) .leaflet-control-container,
+.map-wrap:has(.editor) .basemap-toggle,
+.map-wrap:has(.editor) .map-version { display: none; }
+
+.svg-pin { background: transparent !important; border: 0 !important; }
+.svg-pin svg { filter: drop-shadow(0 2px 4px rgba(0,0,0,.35)); }
+
+.pin-label {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  padding: 2px 8px !important;
+  border-radius: 999px !important;
+  font-size: .7rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  box-shadow: 0 2px 6px rgba(0,0,0,.35);
+  white-space: nowrap;
+}
+.pin-label.start { border-color: #6ec546 !important; color: #d8f1c5 !important; }
+.pin-label.end   { border-color: #e56b6b !important; color: #f4cdcd !important; }
+.pin-label::before { display: none !important; }
+
+.basemap-toggle {
+  position: absolute; top: 1rem; left: 1rem; z-index: 500;
+  width: 36px; height: 36px; border-radius: 4px; cursor: pointer;
+  background: var(--panel); color: var(--text); border: 1px solid var(--border);
+  font-size: 1.1rem; line-height: 1; display: grid; place-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,.3);
+}
+.basemap-toggle:hover { background: var(--panel-2); }
+
+/* Version badge, top-right of the map. Same chrome as the basemap
+   toggle so the corners mirror each other. Hidden while the editor is
+   open (rules above) because the editor sheet occupies that corner. */
+.map-version {
+  position: absolute; top: 1rem; right: 1rem; z-index: 500;
+  padding: .3rem .6rem; border-radius: 999px;
+  background: var(--panel); color: var(--muted);
+  border: 1px solid var(--border);
+  font-size: .72rem; font-weight: 700; letter-spacing: .04em;
+  box-shadow: 0 4px 12px rgba(0,0,0,.3);
+  pointer-events: none; user-select: none;
+}
+
+.editor {
+  position: absolute; top: 1rem; right: 1rem; width: 300px; z-index: 500;
+  /* Cap height to the map area minus the 1rem top + 1rem desired bottom
+     gap, then let the body scroll. Otherwise on a short viewport (e.g.
+     a docked devtools panel, or a small laptop) the form runs off the
+     bottom of the screen and the Save button sits below the fold. */
+  max-height: calc(100% - 2rem); overflow-y: auto;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+  padding: 1rem; display: flex; flex-direction: column; gap: .6rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+  transition: max-height .25s ease;
+}
+/* Children mustn't shrink (default flex-shrink: 1), otherwise the content
+   compresses to fit the cap and there's nothing to scroll, defeating the
+   max-height. Same rule already exists for the mobile media query. */
+.editor > * { flex-shrink: 0; }
+/* Collapse handle: hidden on desktop, shown via the mobile media query as a
+   small chevron pill that sits above the Start/End row. Tapping it folds the
+   sheet body down to height 0; pin-targets stay reachable. */
+.editor-collapse-handle {
+  display: none;  /* desktop default; mobile media query flips this */
+  align-self: center;
+  background: var(--panel-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 999px;
+  width: 56px; height: 22px;
+  padding: 0; cursor: pointer;
+  align-items: center; justify-content: center;
+  margin: -.25rem 0 0;
+}
+.editor-collapse-handle:hover { background: var(--panel-3); }
+.editor-collapse-handle svg {
+  width: 18px; height: 18px;
+  transition: transform .25s ease;
+}
+/* Convention: chevron points the way the sheet would move on click.
+   Expanded → ⌄ (clicking pushes the panel down / hides it).
+   Collapsed → ^ (clicking pops the panel back up). The SVG path is drawn
+   as an up-chevron, so we rotate it 180° while expanded, not while collapsed. */
+.editor-collapse-handle:not(.collapsed) svg { transform: rotate(180deg); }
+.editor-collapsible {
+  display: flex; flex-direction: column; gap: .6rem;
+  max-height: 1200px; opacity: 1;
+  transition: max-height .3s ease, opacity .25s ease, transform .25s ease, margin .25s ease;
+  overflow: hidden;
+}
+.editor-step {
+  background: rgba(110,197,70,.12); color: var(--accent-2);
+  padding: .5rem .7rem; border-radius: 4px; font-size: .875rem;
+}
+.route-summary {
+  background: rgba(110,197,70,.12); color: var(--accent-2);
+  padding: .4rem .6rem; border-radius: 4px; font-size: .8rem;
+}
+.editor label { display: flex; flex-direction: column; gap: .25rem; font-size: .8rem; color: var(--muted); }
+.editor input, .editor select {
+  background: var(--input-bg); color: var(--text); border: 1px solid var(--border);
+  padding: .4rem .55rem; border-radius: 4px; font: inherit;
+}
+.days { border: 1px solid var(--border); border-radius: 4px; padding: .5rem; display: flex; gap: .25rem; }
+.days legend { font-size: .75rem; color: var(--muted); padding: 0 .25rem; }
+.day {
+  flex: 1; background: transparent; color: var(--muted); border: 1px solid var(--border);
+  padding: .25rem 0; border-radius: 4px; font-size: .75rem; cursor: pointer;
+}
+.day.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; }
+.editor-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+.editor-actions button {
+  background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+  padding: .5rem .8rem; border-radius: 4px; cursor: pointer;
+}
+.editor-actions button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+.editor-actions button.primary:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Top Save/Cancel bar, desktop default is hidden; the mobile media query
+   below flips it on as a sticky header inside the scrolling editor sheet. */
+.editor-actions-top { display: none; }
+
+/* Green pulse, applied for ~1.7s when the user taps Save before a required
+   field is filled. Phases brightness up and down twice so it draws the eye
+   without being a stuttery flash. */
+@keyframes field-pulse {
+  0%   { box-shadow: 0 0 0 0    rgba(110,197,70, 0);    background-color: rgba(110,197,70, 0); }
+  20%  { box-shadow: 0 0 0 4px  rgba(110,197,70, .55);  background-color: rgba(110,197,70, .22); }
+  50%  { box-shadow: 0 0 0 2px  rgba(110,197,70, .25);  background-color: rgba(110,197,70, .08); }
+  80%  { box-shadow: 0 0 0 4px  rgba(110,197,70, .55);  background-color: rgba(110,197,70, .22); }
+  100% { box-shadow: 0 0 0 0    rgba(110,197,70, 0);    background-color: rgba(110,197,70, 0); }
+}
+.field-highlight {
+  animation: field-pulse 1.7s ease-in-out;
+  border-radius: 6px;
+}
+
+/* ---------- Pin target toggle + address search ---------- */
+.pin-targets {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .35rem;
+  margin: .25rem 0;
+}
+.target-btn {
+  background: var(--panel-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: .35rem .5rem; cursor: pointer; font: inherit;
+  display: flex; align-items: center; gap: .35rem;
+  text-align: left; min-width: 0;
+}
+.target-btn .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--muted); flex-shrink: 0;
+}
+.target-btn.start .dot { background: #6ec546; }
+.target-btn.end   .dot { background: #e56b6b; }
+.target-btn.on    { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.target-btn .muted { font-size: .7rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.search-row { display: flex; gap: .35rem; align-items: stretch; }
+.search-input {
+  flex: 1;
+  background: var(--input-bg); color: var(--text); border: 1px solid var(--border);
+  padding: .4rem .55rem; border-radius: 4px; font: inherit;
+}
+.search-row .small { padding: .35rem .55rem; }
+.search-results {
+  list-style: none; padding: 0; margin: .25rem 0 0;
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: 4px;
+  max-height: 180px; overflow-y: auto;
+}
+.search-results li button {
+  width: 100%; text-align: left; padding: .4rem .55rem;
+  background: transparent; border: 0; color: var(--text);
+  border-bottom: 1px solid var(--border); cursor: pointer; font-size: .85rem;
+  font: inherit;
+}
+.search-results li:last-child button { border-bottom: 0; }
+.search-results li button:hover { background: var(--panel-3); }
+
+.geo-explainer {
+  background: rgba(110,197,70,.08); border: 1px solid var(--border);
+  padding: .55rem .65rem; border-radius: 4px;
+  display: flex; flex-direction: column; gap: .35rem;
+}
+.geo-explainer p { margin: 0; font-size: .85rem; }
+.geo-explainer-actions { display: flex; gap: .4rem; }
+
+/* Block list */
+.block-list { list-style: none; padding: 0; margin: .5rem 0 0; display: flex; flex-direction: column; gap: .35rem; }
+.block-row {
+  display: flex; align-items: center; gap: .5rem;
+  background: var(--panel-2); border: 1px solid var(--border);
+  padding: .45rem .55rem; border-radius: 4px;
+}
+.block-body { flex: 1; min-width: 0; }
+
+.inline-check { flex-direction: row !important; align-items: center; gap: .5rem; color: var(--text) !important; font-size: .85rem !important; }
+.inline-check input { width: auto; margin: 0; }
+
+/* Per-journey age + sex filter block in the editor. Three inputs in a
+   row on desktop, wraps on narrow screens. Same shape as ProfileView's
+   age-grid so the two surfaces feel related. */
+.editor-prefs {
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: .5rem .75rem .75rem; margin: 0;
+  display: flex; flex-direction: column; gap: .35rem;
+}
+.editor-prefs legend {
+  font-size: .72rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .1em; font-weight: 600;
+  padding: 0 .25rem;
+}
+.editor-prefs-row {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem;
+}
+.editor-prefs-row label { font-size: .75rem; }
+@media (max-width: 600px) {
+  .editor-prefs-row { grid-template-columns: 1fr 1fr; }
+  .editor-prefs-row label:last-child { grid-column: 1 / -1; }
+}
+
+/* ---------- Mobile layout (< 768px) ---------- */
+@media (max-width: 767px) {
+  .app-body { grid-template-columns: 1fr; }
+  .appbar-burger { display: grid; }
+  .brand-text { display: none; }
+  .appbar-profile-name { display: none; }
+  /* Nav items collapse to icons only, sign-out moves into the profile
+     page footer so the top bar stays single-row on every phone size. */
+  .appbar-nav-label { display: none; }
+  .appbar-nav-item  { padding: 0; width: 36px; justify-content: center; }
+  .appbar-signout   { display: none; }
+
+  /* Full-bleed sidebar on phones, pops out from the left and covers the
+     whole map area so all controls live inside the menu while it's open. */
+  .sidebar {
+    position: fixed; top: 56px; bottom: 0; left: 0;
+    width: 100vw;
+    z-index: 1100;
+    transform: translateX(-100%);
+    transition: transform .25s ease;
+    box-shadow: 4px 0 20px rgba(0,0,0,.5);
+  }
+  .app.sidebar-open .sidebar { transform: translateX(0); }
+
+  /* When the sidebar is open, push Leaflet's zoom +/- and any other map
+     overlays under it so the user can't tap through to them. */
+  .app.sidebar-open .leaflet-control-container,
+  .app.sidebar-open .basemap-toggle {
+    z-index: 400;
+    pointer-events: none;
+  }
+
+  /* Editor becomes a bottom sheet. Bumped above Leaflet's control container
+     (zoom +/-, attribution) so the +/- buttons sit BEHIND the editor sheet
+     on a phone, they're hidden anyway via the rule below to keep the
+     sheet's edge clean. */
+  .editor {
+    top: auto; right: .5rem; left: .5rem; bottom: .5rem;
+    width: auto; max-height: 70vh; overflow-y: auto;
+    z-index: 900;
+  }
+  /* The sheet is a flex column with a constrained max-height. Without this,
+     flex children shrink to fit the box (default flex-shrink: 1), content
+     compresses instead of overflowing, so the sheet has nothing to scroll
+     and the Save button at the bottom becomes unreachable. */
+  .editor > * { flex-shrink: 0; }
+
+  /* Sticky Save/Cancel bar pinned to the top of the scrolling editor sheet.
+     The negative horizontal margins + matching padding extend the bar across
+     the editor's 1rem padding so its background occludes content scrolling
+     beneath it. Hidden when the editor is folded down. */
+  .editor-actions-top {
+    display: flex;
+    position: sticky;
+    top: 0;
+    margin: -.6rem -1rem .25rem;     /* counteract editor padding + flex gap */
+    padding: .5rem 1rem;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    z-index: 5;
+  }
+  /* When collapsed the rest of the form is hidden, so the Save/Cancel bar
+     stays visible right below the pin-targets, the user can drop both
+     pins on the map and tap Save without ever re-expanding the sheet.
+     Drop the sticky pull-up margin (only useful while scrolling) so the
+     bar sits cleanly under the pin row with a normal gap. */
+  .editor.collapsed .editor-actions-top {
+    position: static;
+    margin: 0;
+    border-bottom: none;
+    background: transparent;
+    padding: 0;
+  }
+
+  /* Collapse handle is mobile-only, desktop has plenty of room. */
+  .editor-collapse-handle { display: inline-flex; }
+
+  /* Collapsed state: hide everything except handle + pin-targets so the
+     user can see the map and tap pins. The body fades + slides up via
+     max-height and opacity transitions for a quick "fold" feel. */
+  .editor.collapsed { max-height: none; overflow: visible; }
+  .editor.collapsed .editor-collapsible {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+  }
+
+  .basemap-toggle { left: .5rem; top: .5rem; }
+  .leaflet-bottom.leaflet-right { bottom: 1rem !important; right: 1rem !important; }
+
+  /* On a phone the dropdown takes the full width and drops out from under
+     the appbar instead of dangling off the bell button, anchoring it to
+     the bell would shove it off-screen on the left for narrow viewports. */
+  .appbar-notif { position: static; }
+  .notif-menu {
+    position: fixed;
+    top: 56px;        /* appbar height */
+    left: 0; right: 0;
+    width: 100vw;
+    max-height: calc(100vh - 56px);
+    border-radius: 0;
+    border-left: 0; border-right: 0;
+    box-shadow: 0 8px 16px rgba(0,0,0,.45);
+  }
+
+  /* The big content modals (Messages, Matches) take the entire screen on a
+     phone, there's no value in showing 8px of dimmed map around the edges.
+     Small confirm dialogs (.modal-md) stay centred and small. */
+  .modal-backdrop:has(.modal-lg) { padding: 0; }
+  .modal-lg {
+    max-width: none; max-height: none;
+    width: 100vw; height: 100dvh;
+    border-radius: 0;
+    border-left: 0; border-right: 0;
+    box-shadow: none;
+  }
+  .modal-lg .modal-body { padding: .75rem .85rem 1rem; }
+  .modal-lg .modal-header { padding: .65rem .85rem; }
+
+  /* Profile / Legal pages: drop the centred-card chrome, use the whole
+     screen so big sections don't stack inside a narrow column with wasted
+     padding on every side. */
+  .page { padding: 0; }
+  .page-inner {
+    max-width: none; margin: 0;
+    background: transparent; border: 0;
+    border-radius: 0;
+    padding: .85rem 1rem 1.5rem;
+  }
+
+  /* Compact action buttons on a phone: Edit/Delete (in journey-card-actions)
+     and Disconnect/Block & Report (in the danger-row) all shrink so they
+     fit on one row with the surrounding pills. */
+  .journey-card-actions .small,
+  .request-actions.danger-row .small {
+    padding: .25rem .5rem;
+    font-size: .72rem;
+    min-height: 28px;          /* below the 44px touch-target minimum, deliberate */
+  }
+
+  /* Matches section: hide the inline list and the empty state, the section
+     header already shows the count and the "Show matches" button below opens
+     the full MatchesModal. */
+  .matches-section .matches-inline { display: none; }
+  .matches-section .matches-summary-mobile { display: block; margin-top: .35rem; }
+}
+
+/* Bigger tap targets on touch devices */
+@media (hover: none) {
+  button, .row, .day, .journeys li .row { min-height: 44px; }
+  .leaflet-touch .leaflet-bar a { width: 36px !important; height: 36px !important; line-height: 36px !important; }
+}
+
+/* ---------- Match rows ---------- */
+.match-row { display: flex; gap: .6rem; align-items: flex-start; }
+.match-body { flex: 1; min-width: 0; }
+
+/* ---------- Profile modal ---------- */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 2000;
+  display: grid; place-items: center; padding: 1rem; overflow-y: auto;
+}
+.modal {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+  width: 100%; max-width: 520px; max-height: 92vh; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,.6);
+  display: flex; flex-direction: column;
+}
+.modal-md { max-width: 520px; }
+/* Lock the large-modal frame to a fixed height on desktop so switching
+   threads in MessagesModal (or sliders in MatchesModal) doesn't make the
+   modal jump around as content grows/shrinks. The internal panes scroll. */
+.modal-lg { max-width: 880px; height: min(720px, 82vh); }
+.modal-body { padding: 1rem 1.25rem 1.25rem; overflow-y: auto; flex: 1; min-height: 0; }
+.modal-header-extras { display: flex; align-items: center; gap: .35rem; }
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; padding: .85rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+.modal-header h2 { font-size: 1rem; margin: 0; }
+.modal-title { display: flex; gap: .75rem; align-items: center; }
+.modal-title h2 { margin: 0; font-size: 1.1rem; }
+.modal-actions { display: flex; gap: .5rem; flex-wrap: wrap; padding-top: .25rem; }
+.modal-actions button {
+  background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+  padding: .55rem .9rem; border-radius: 4px; cursor: pointer;
+}
+.modal-actions button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+.modal-actions button:disabled { opacity: .5; cursor: not-allowed; }
+
+.profile-form { display: flex; flex-direction: column; gap: 1rem; }
+.profile-form section { display: flex; flex-direction: column; gap: .55rem; }
+.profile-form h3 {
+  margin: .5rem 0 0; font-size: .75rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .12em;
+}
+/* h4 used as a subhead inside a profile section, e.g. Age / Sex inside the
+   "Who I'll ride with" block. Smaller, less weighty than h3. */
+.profile-form h4.subhead {
+  margin: .65rem 0 .15rem; font-size: .7rem; color: var(--accent-2);
+  text-transform: uppercase; letter-spacing: .1em; font-weight: 600;
+}
+.profile-form .xsmall { font-size: .72rem; }
+.profile-form label {
+  display: flex; flex-direction: column; gap: .25rem;
+  font-size: .8rem; color: var(--muted);
+}
+.profile-form input, .profile-form select, .profile-form textarea {
+  background: var(--input-bg); color: var(--text); border: 1px solid var(--border);
+  padding: .5rem .65rem; border-radius: 4px; font: inherit;
+}
+.profile-form input[type="range"] { padding: 0; background: transparent; border: 0; }
+.profile-form textarea { resize: vertical; min-height: 48px; }
+
+.success {
+  background: rgba(110,197,70,.15); color: var(--accent-2);
+  padding: .5rem .7rem; border-radius: 4px; font-size: .875rem;
+}
+
+.age-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem;
+}
+.age-grid label { font-size: .75rem; }
+.sex-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem;
+}
+.sex-grid label { font-size: .75rem; }
+@media (max-width: 480px) {
+  .age-grid, .sex-grid { grid-template-columns: 1fr; }
+}
+.age-chip {
+  color: var(--muted); font-weight: 400; font-size: .85em;
+}
+
+/* ---------- Name → preferences dropdown ---------- */
+.prefs-dd { position: relative; display: inline-block; }
+.prefs-dd-trigger {
+  background: none; border: 0; padding: 0; margin: 0; cursor: pointer;
+  color: var(--text); font: inherit; text-align: left;
+  display: inline-flex; align-items: baseline; gap: .25rem;
+}
+.prefs-dd-trigger strong { font-weight: 600; }
+.prefs-dd-trigger:hover strong { text-decoration: underline; }
+.prefs-dd-caret { color: var(--muted); font-size: .65rem; transition: transform .15s ease; }
+.prefs-dd-trigger.open .prefs-dd-caret { transform: rotate(180deg); }
+.prefs-dd-panel {
+  position: absolute; top: 100%; left: 0; z-index: 30; margin-top: .3rem;
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: 6px;
+  padding: .55rem .65rem; min-width: 180px; max-width: 240px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.45);
+}
+.prefs-dd-title {
+  font-size: .65rem; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--muted); margin-bottom: .4rem;
+}
+.prefs-dd-bio {
+  margin: 0 0 .4rem; font-style: italic; color: var(--muted); font-size: .82rem; line-height: 1.35;
+}
+.prefs-dd-chips { display: flex; flex-wrap: wrap; gap: .3rem; }
+
+/* ---------- Lift requests ---------- */
+.requests h2 { font-size: .9rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: .5rem 0; }
+.badge {
+  background: var(--accent); color: var(--accent-ink); font-size: .65rem;
+  padding: .05rem .4rem; border-radius: 999px; font-weight: 700;
+}
+.muted-badge { background: var(--panel-2); color: var(--muted); }
+
+.request-row {
+  display: flex; gap: .55rem; padding: .55rem .65rem;
+  background: var(--panel-2); border-radius: 4px;
+}
+.request-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .25rem; }
+.request-msg {
+  background: rgba(110,197,70,.08); border-left: 2px solid var(--accent-2);
+  padding: .35rem .55rem; border-radius: 4px; font-size: .85rem; color: var(--text);
+  font-style: italic;
+}
+.request-actions { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .25rem; }
+button.small {
+  background: var(--panel); color: var(--text); border: 1px solid var(--border);
+  padding: .35rem .65rem; border-radius: 4px; font-size: .8rem; cursor: pointer;
+}
+button.small.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+button.small:hover { background: var(--panel-2); }
+button.small.primary:hover { filter: brightness(1.1); }
+button.small:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Mobile-only "Show matches" summary, hidden on desktop where the inline
+   list is the source of truth. */
+.matches-summary-mobile { display: none; }
+.match-count { color: var(--accent-2); font-weight: 700; }
+
+/* Stack the connected-card action rows: Chat lives on its own line as the
+   primary action; Disconnect / Block & Report sit below it on a danger row. */
+.request-actions.chat-row { margin-top: .35rem; }
+.request-actions.danger-row {
+  margin-top: .15rem;
+  border-top: 1px dashed var(--border);
+  padding-top: .4rem;
+}
+.request-actions.danger-row .small.danger-link {
+  background: transparent; border-color: transparent;
+  color: var(--danger); font-weight: 600;
+}
+.request-actions.danger-row .small.danger-link:hover {
+  background: rgba(229,107,107,.1); border-color: rgba(229,107,107,.3);
+}
+
+/* Block & Report modal reuses .confirm-modal layout but adds form fields. */
+.block-report-modal label { display: flex; flex-direction: column; gap: .25rem; font-size: .85rem; color: var(--muted); }
+.block-report-modal select,
+.block-report-modal textarea {
+  background: var(--input-bg); color: var(--text); border: 1px solid var(--border);
+  padding: .45rem .55rem; border-radius: 4px; font: inherit;
+}
+.block-report-modal textarea { resize: vertical; min-height: 64px; }
+.modal-actions.confirm-actions button.danger {
+  background: var(--danger); border-color: var(--danger);
+  color: #1a0606; font-weight: 700;
+}
+
+/* ---------- Error boundary fallback ---------- */
+.boundary-screen {
+  min-height: 100vh;
+  display: grid; place-items: center;
+  padding: 1rem;
+  background: var(--bg);
+}
+.boundary-card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.5rem;
+  max-width: 460px; width: 100%;
+  text-align: center;
+  display: flex; flex-direction: column; gap: .85rem;
+}
+.boundary-card h1 { margin: 0; font-size: 1.15rem; }
+.boundary-card .muted { color: var(--muted); margin: 0; line-height: 1.45; }
+.boundary-actions {
+  display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap;
+}
+.boundary-actions .primary {
+  background: var(--accent); border-color: var(--accent);
+  color: var(--accent-ink); font-weight: 700;
+  padding: .55rem .9rem; border-radius: 4px; border: 1px solid var(--accent); cursor: pointer;
+}
+.boundary-actions button {
+  background: var(--panel-2); color: var(--text);
+  border: 1px solid var(--border);
+  padding: .55rem .9rem; border-radius: 4px; cursor: pointer; font: inherit;
+}
+.boundary-stack {
+  text-align: left; font-size: .72rem; color: var(--muted);
+  background: var(--input-bg); border: 1px solid var(--border);
+  border-radius: 4px; padding: .5rem; max-height: 200px; overflow: auto;
+  white-space: pre-wrap; word-break: break-word;
+}
+
+/* ---------- Messages modal (two-pane layout) ---------- */
+.messages-modal {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: .85rem;
+  height: 100%;
+  min-height: 0;
+}
+.convo-list {
+  display: flex; flex-direction: column; gap: .35rem;
+  overflow-y: auto; min-height: 0;
+  padding-right: .25rem;
+  border-right: 1px solid var(--border);
+}
+.convo-row {
+  display: flex; gap: .55rem; align-items: flex-start;
+  background: var(--panel-2); color: var(--text);
+  border: 1px solid transparent; border-radius: 6px;
+  padding: .5rem .6rem; cursor: pointer;
+  text-align: left; font: inherit; width: 100%;
+}
+.convo-row:hover { background: var(--panel-3); }
+.convo-row.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.convo-row.has-unread { background: rgba(110,197,70,.08); }
+.convo-body { flex: 1; min-width: 0; }
+.convo-top {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: .5rem;
+}
+.convo-snippet {
+  font-size: .82rem;
+  display: flex; gap: .35rem; align-items: center;
+  margin-top: .15rem;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.convo-snippet > span:first-child {
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.convo-thread {
+  display: flex; flex-direction: column; min-height: 0; min-width: 0;
+}
+.convo-thread-head {
+  display: flex; gap: .65rem; align-items: center;
+  padding-bottom: .55rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: .5rem;
+}
+
+/* On a phone the modal is full-screen; collapse to a single pane and
+   show the conversation list OR the thread, not both side-by-side. */
+@media (max-width: 767px) {
+  .messages-modal {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  .convo-list {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 0 0 .5rem;
+    max-height: 35vh;
+    flex-shrink: 0;
+  }
+}
+
+/* Chat icon button on connected cards. Replaces the inline message thread,
+   opens the central Messages modal at this thread instead. */
+.icon-btn.chat-btn {
+  position: relative;
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: var(--accent); border: 1px solid var(--accent);
+  color: var(--accent-ink); font-weight: 700;
+  padding: .35rem .6rem; border-radius: 4px;
+  font-size: .8rem; cursor: pointer; font-family: inherit;
+}
+.icon-btn.chat-btn:hover { filter: brightness(1.08); }
+.icon-btn.chat-btn svg { width: 16px; height: 16px; }
+.icon-btn.chat-btn .chat-badge {
+  background: var(--danger); color: #1a0606;
+  font-size: .65rem; line-height: 1; font-weight: 800;
+  border-radius: 999px; padding: .15rem .4rem;
+  margin-left: .15rem;
+}
+
+
+.pill.pending  { background: rgba(245,185,66,.15); color: var(--request); }
+.pill.accepted { background: rgba(110,197,70,.15); color: var(--offer); }
+.pill.declined { background: rgba(229,107,107,.15); color: var(--danger); }
+
+/* Changelog pills on the About page: distinguish features/bugs at a glance. */
+.pill.kind-feature     { background: rgba(110,197,70,.15);  color: var(--accent-2); }
+.pill.kind-improvement { background: rgba(143,214,106,.15); color: var(--accent-2); }
+.pill.kind-bug         { background: rgba(229,107,107,.15); color: var(--danger); }
+.changelog-list { list-style: none; padding: 0; margin: 0; }
+
+/* Maintenance page, full-bleed hero image at the top of the auth-style card.
+   Card is wider than the regular auth-card (more content) and the hero is
+   responsively capped so it never dominates a short viewport (landscape
+   phones, low-height windows). */
+.auth-card.maintenance-card {
+  padding: 0;
+  overflow: hidden;
+  max-width: 520px;
+}
+.maintenance-hero {
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-bottom: 1px solid var(--border);
+  /* Never let the hero take more than half the viewport, keeps the
+     "back in a moment" text + contact email visible without scrolling
+     even on short phones and landscape tablets. */
+  max-height: 50vh;
+}
+.maintenance-body { padding: 1.5rem 1.75rem 1.75rem; }
+@media (max-width: 480px) {
+  .maintenance-body { padding: 1.25rem 1.25rem 1.5rem; }
+}
+@media (max-height: 520px) {
+  /* Landscape phones and tiny laptops, make the hero shorter still
+     so the call-to-action stays above the fold. */
+  .maintenance-hero { aspect-ratio: 16 / 7; max-height: 40vh; }
+}
+
+.match-action { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-top: .35rem; }
+.compose { display: flex; flex-direction: column; gap: .35rem; margin-top: .35rem; }
+.compose textarea {
+  background: var(--input-bg); color: var(--text); border: 1px solid var(--border);
+  padding: .4rem .55rem; border-radius: 4px; font: inherit; font-size: .85rem;
+}
+.compose-actions { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; }
+.compose-actions .muted { flex: 1; min-width: 0; }
+
+.inbox-banner {
+  background: rgba(110,197,70,.12); color: var(--accent-2);
+  border: 1px solid rgba(110,197,70,.35);
+  padding: .55rem .7rem; border-radius: 4px; font-size: .85rem; font-weight: 500;
+}
+
+.danger-zone,
+.data-export {
+  border-top: 1px solid var(--border); padding-top: 1rem; margin-top: 1rem;
+  display: flex; flex-direction: column; gap: .5rem; align-items: flex-start;
+}
+.data-export a.small.primary {
+  text-decoration: none;
+  background: var(--accent); border-color: var(--accent); color: var(--accent-ink);
+  font-weight: 700; padding: .55rem .9rem; border-radius: 4px;
+}
+button.danger {
+  background: transparent; color: var(--danger); border: 1px solid var(--danger);
+  padding: .55rem .9rem; border-radius: 4px; cursor: pointer; font-weight: 600;
+}
+button.danger:hover { background: rgba(229,107,107,.1); }
+button.danger:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Unit-toggle distances, span with role="button" so it nests safely. */
+.unit-toggle {
+  display: inline; cursor: pointer; user-select: none;
+  border-bottom: 1px dotted currentColor;
+  padding: 0; background: none; color: inherit; font: inherit;
+}
+.unit-toggle:hover, .unit-toggle:focus-visible {
+  color: var(--accent-2); outline: none;
+}
+
+/* Custom SVG icons in the AppBar, match the brand stroke style. */
+.appbar-svg { width: 20px; height: 20px; display: block; color: var(--text); opacity: .85; }
+.appbar-icon:hover .appbar-svg,
+.appbar-burger:hover .appbar-svg { color: var(--accent-2); opacity: 1; }
+
+/* ---------- Shared journeys (groups) ---------- */
+
+.groups-page .page-title h1 { font-size: 1.15rem; }
+
+.groups-list {
+  display: flex; flex-direction: column; gap: 1rem;
+}
+
+.groups-section {
+  display: flex; flex-direction: column; gap: .55rem;
+  padding: .85rem; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--panel);
+}
+
+.groups-join-row {
+  display: flex; gap: .5rem; align-items: stretch;
+}
+.groups-join-row input {
+  flex: 1; padding: .5rem .65rem; border: 1px solid var(--border);
+  border-radius: 4px; background: var(--panel-2); color: var(--text); font-size: .9rem;
+}
+
+.group-cards { display: flex; flex-direction: column; gap: .65rem; }
+
+.group-card {
+  display: flex; flex-direction: column; gap: .35rem;
+  padding: .85rem 1rem;
+  border: 1px solid var(--border); border-radius: 6px;
+  background: var(--panel); color: var(--text);
+  text-align: left; cursor: pointer; font: inherit;
+  transition: background .12s, border-color .12s;
+}
+.group-card:hover { background: var(--panel-2); border-color: var(--accent-2); }
+
+.group-card-top {
+  display: flex; justify-content: space-between; align-items: baseline; gap: .5rem;
+  flex-wrap: wrap;
+}
+.group-card-top strong { font-size: 1rem; }
+
+.group-day-line { font-size: .88rem; line-height: 1.4; }
+.group-day-line b { font-weight: 600; }
+
+.group-card-foot { padding-top: .25rem; }
+
+.invite-row {
+  display: flex; align-items: center; gap: .65rem;
+}
+.invite-code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: .9rem; padding: .35rem .55rem;
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: 4px;
+  user-select: all;
+}
+
+.rotation-grid {
+  display: grid; gap: .4rem;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+@media (max-width: 540px) {
+  .rotation-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.rotation-cell {
+  display: flex; flex-direction: column; gap: .25rem;
+  padding: .5rem .4rem;
+  border: 1px solid var(--border); border-radius: 4px;
+  background: var(--panel);
+}
+.rotation-cell.inactive { opacity: .55; }
+.rotation-day {
+  font-size: .72rem; font-weight: 700; letter-spacing: .04em;
+  color: var(--muted); text-transform: uppercase;
+}
+.rotation-cell select {
+  width: 100%; padding: .3rem .35rem; border: 1px solid var(--border);
+  border-radius: 3px; background: var(--panel-2); color: var(--text); font-size: .82rem;
+}
+.rotation-driver { font-size: .85rem; }
+
+.member-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .55rem; }
+.member-row {
+  display: flex; gap: .65rem; align-items: center;
+  padding: .5rem .6rem;
+  border: 1px solid var(--border); border-radius: 4px;
+  background: var(--panel);
+}
+.member-body { display: flex; flex-direction: column; min-width: 0; }
+.member-body strong { font-size: .92rem; }
+
+.groups-form-actions {
+  display: flex; gap: .65rem; align-items: center; justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.groups-form-actions .link { margin-right: auto; }
+
+/* PinPicker, small embedded Leaflet map. */
+.pin-picker {
+  display: flex; flex-direction: column; gap: .4rem;
+  border: 1px solid var(--border); border-radius: 4px; padding: .5rem;
+  background: var(--panel-2);
+}
+.pin-picker-actions { display: flex; gap: .4rem; flex-wrap: wrap; }
+.pin-picker-actions .ghost.small {
+  font-size: .78rem; padding: .3rem .55rem;
+  background: var(--panel); color: var(--text);
+  border: 1px solid var(--border); border-radius: 4px; cursor: pointer;
+}
+.pin-picker-actions .ghost.small:hover:not(:disabled) { border-color: var(--accent-2); }
+.pin-picker-actions .ghost.small:disabled { opacity: .5; cursor: not-allowed; }
+.pin-picker-map {
+  height: 220px; width: 100%; border-radius: 3px;
+}
+.pin-picker-hint { padding-top: .15rem; }

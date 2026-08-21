@@ -1,0 +1,33 @@
+<?php
+/**
+ * Optional OAuth provider config for SwiftLift.
+ *
+ * Rename this file to `oauth.php` (drop the .example) and fill in the values
+ * for any providers you want to enable. Without this file (or env vars),
+ * the corresponding social-login button stays hidden.
+ *
+ * Env vars take precedence, if you set FACEBOOK_APP_ID in .env, that wins
+ * over the value here. Either path works; pick the one easier for you to
+ * deploy.
+ *
+ * IMPORTANT
+ *  • This file lives under /config which is blocked from the web by .htaccess.
+ *    Don't move it elsewhere; you'd leak the secret.
+ *  • Add `config/oauth.php` to your .gitignore so the secret never enters git.
+ *
+ * Setup steps for Facebook:
+ *  1. https://developers.facebook.com → My Apps → Create App ("Consumer").
+ *  2. Add the "Facebook Login" product → Settings.
+ *  3. Valid OAuth Redirect URI:
+ *       https://swiftlift.gg/api/index.php?p=auth/oauth/facebook/callback
+ *  4. Settings → Basic, copy App ID and App Secret below.
+ *  5. To request real users' emails, submit for the "email" permission in
+ *     App Review. App admins / testers can use it before review.
+ */
+
+return [
+    'facebook' => [
+        'app_id'     => '',   // e.g. '123456789012345'
+        'app_secret' => '',
+    ],
+];

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+
+  <title>SwiftLift: back in a moment</title>
+  <meta name="description" content="SwiftLift is doing maintenance. We'll be back shortly." />
+  <meta name="robots" content="noindex" />
+
+  <!-- Open Graph / link previews. Uses the maintenance illustration rather
+       than the app icon, so a shared link reads as "we're down", not "we're new". -->
+  <meta property="og:type"         content="website" />
+  <meta property="og:site_name"    content="SwiftLift" />
+  <meta property="og:title"        content="SwiftLift: back in a moment" />
+  <meta property="og:description"  content="SwiftLift is doing maintenance. We'll be back shortly." />
+  <meta property="og:url"          content="https://swiftlift.gg/" />
+  <meta property="og:image"        content="https://swiftlift.gg/maintenance.jpg" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="960" />
+  <meta property="og:image:type"   content="image/jpeg" />
+  <meta property="og:image:alt"    content="A gremlin driving off in a car loaded with our servers, past a 'We're down for maintenance' sign" />
+  <meta property="og:locale"       content="en_GB" />
+
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="SwiftLift: back in a moment" />
+  <meta name="twitter:description" content="SwiftLift is doing maintenance. We'll be back shortly." />
+  <meta name="twitter:image"       content="https://swiftlift.gg/maintenance.jpg" />
+  <meta name="twitter:image:alt"   content="A gremlin driving off in a car loaded with our servers, past a 'We're down for maintenance' sign" />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baumans&family=Red+Hat+Display:wght@400;500;600;700;800;900&display=swap" />
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:         #1a1a1a;
+      --panel:      #242424;
+      --text:       #ececec;
+      --muted:      #9a9a9a;
+      --accent:     #6ec546;
+      --accent-2:   #8fd66a;
+      --warn:       #f5b942;
+      --border:     #3a3a3a;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; min-height: 100%; height: 100%; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: "Red Hat Display", system-ui, sans-serif;
+      line-height: 1.55;
+      background-image:
+        radial-gradient(ellipse at top, rgba(245,185,66,.08) 0%, transparent 60%),
+        linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
+      display: grid; place-items: center;
+      padding: 2rem 1.25rem;
+    }
+    main.card {
+      max-width: 560px; width: 100%; text-align: center;
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 0 0 2rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,.4), 0 0 0 1px rgba(245,185,66,.06);
+      overflow: hidden;
+    }
+    .hero {
+      width: 100%;
+      aspect-ratio: 5 / 4;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      border-bottom: 1px solid var(--border);
+      /* Cap the hero so it never crowds out the text on shorter
+         screens (landscape phones, low-height laptops). */
+      max-height: 50vh;
+    }
+    .body { padding: 1.5rem 1.75rem 0; }
+    h1 {
+      font-family: "Baumans", system-ui, sans-serif;
+      font-size: 2.5rem; margin: 0 0 .25rem; font-weight: 400; letter-spacing: .02em;
+      background: linear-gradient(90deg, #ffffff, var(--accent-2));
+      background-clip: text; -webkit-background-clip: text; color: transparent;
+    }
+    p.tagline { font-size: 1rem; color: var(--muted); margin: 0 0 1.5rem; }
+    .badge {
+      display: inline-block; padding: .35rem .85rem;
+      border-radius: 999px;
+      background: rgba(245,185,66,.12); color: var(--warn);
+      font-size: .82rem; font-weight: 700;
+      letter-spacing: .04em; text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+    .badge .spinner {
+      display: inline-block;
+      width: .65rem; height: .65rem;
+      border-radius: 50%;
+      border: 2px solid var(--warn);
+      border-top-color: transparent;
+      vertical-align: middle; margin-right: .5rem;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    p.lede {
+      font-size: 1rem; color: var(--text);
+      margin: 0 0 1rem; line-height: 1.6;
+    }
+    p.muted { color: var(--muted); font-size: .9rem; margin: .25rem 0 0; }
+    a.contact {
+      color: var(--accent-2); text-decoration: none;
+      border-bottom: 1px dotted var(--accent-2);
+    }
+    a.contact:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    footer.foot {
+      margin-top: 1.5rem; color: var(--muted); font-size: .8rem;
+    }
+    @media (max-width: 480px) {
+      main.card { padding: 0 0 1.5rem; }
+      .body { padding: 1.25rem 1.25rem 0; }
+      h1 { font-size: 2rem; }
+    }
+    @media (max-height: 520px) {
+      /* Landscape phones, make the hero shorter so the body text
+         and the contact email stay above the fold. */
+      .hero { aspect-ratio: 16 / 7; max-height: 40vh; }
+      .body { padding: 1rem 1.5rem 0; }
+      h1 { font-size: 1.75rem; }
+    }
+  </style>
+
+</head>
+<body>
+  <main class="card" role="main">
+    <img class="hero"
+         src="/maintenance.jpg"
+         alt="A gremlin driving off in a car loaded with our servers past a 'We're down for maintenance' sign"
+         width="600" height="480" />
+    <div class="body">
+      <h1>Back in a moment</h1>
+      <p class="tagline">A gremlin is making improvements.</p>
+
+      <div class="badge"><span class="spinner"></span>Maintenance in progress</div>
+
+      <p class="lede">
+        The site is briefly offline while we update something. Your account,
+        journeys and messages are safe. We'll be back shortly.
+      </p>
+      <p class="muted">
+        Try refreshing in a few minutes.
+      </p>
+
+      <p class="lede" style="margin-top: 1.5rem; margin-bottom: 0;">
+        Urgent? Reach us at <a class="contact" href="mailto:hello@swiftlift.gg">hello@swiftlift.gg</a>.
+      </p>
+
+      <footer class="foot">
+        &copy; SwiftLift. A small Guernsey project.
+      </footer>
+    </div>
+  </main>
+</body>
+</html>

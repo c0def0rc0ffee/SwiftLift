@@ -1,0 +1,41 @@
+# Normalise line endings.
+#
+# The working tree drifted to CRLF (edited from Windows) while every blob in
+# the repository is LF, so `git diff` reported ~20,000 changed lines across
+# essentially every tracked file. Real changes became impossible to review,
+# and a release diff could not be sanity-checked before deploy.
+#
+# `* text=auto` tells git to store text files with LF in the repository and
+# leave the working copy alone. After adding this file, run once:
+#
+#     git add --renormalize .
+#     git commit -m "Normalise line endings to LF"
+#
+# ...and diffs go back to showing only what actually changed.
+* text=auto
+
+# Explicit for the file types in this project, so the heuristic never has to
+# guess on an unusual file.
+*.php   text eol=lf
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.js    text eol=lf
+*.mjs   text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+*.json  text eol=lf
+*.sql   text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.webmanifest text eol=lf
+.htaccess     text eol=lf
+.env.example  text eol=lf
+
+# Binary: never touch these.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary

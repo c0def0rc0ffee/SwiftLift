@@ -1,0 +1,14 @@
+# SwiftLift: small Guernsey lift-sharing noticeboard.
+# We're happy to be indexed; just keep crawlers off the bits that aren't
+# useful (API endpoints, the one-off setup script, expiring email tokens).
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /setup.php
+Disallow: /?verify=
+Disallow: /?reset=
+Disallow: /?oauth_
+
+# A polite crawl rate: there's no point hammering this site.
+Crawl-delay: 5

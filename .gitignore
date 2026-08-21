@@ -1,0 +1,46 @@
+.env
+config/oauth.php
+node_modules/
+web/dist/
+deploy/
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Built deploy artefact: assembled locally per DEPLOY.md, FTP'd to IONOS,
+# never source of truth.
+Swiftlift Dist/
+
+# Local agent / IDE state.
+.claude/
+
+# Local Apache outbox (file fallback when mail() fails).
+storage/
+
+# Stray editor/swap files seen on Windows.
+.goutputstream-*
+
+# Synology NAS metadata.
+@eaDir/
+
+# TypeScript incremental build cache: regenerated on every build.
+*.tsbuildinfo
+
+# Deployment credentials. Never commit these: the whole repo history was
+# restarted once because a vendored server copy carried a plaintext DB
+# password. Matches any case/spacing variant (there is a file literally
+# named "SFTP " with a trailing space).
+*sftp*
+*SFTP*
+*ftp*.txt
+*credentials*
+
+# Internal operational docs. Kept on disk, never published: CODE_AUDIT.md is a
+# map of this app's security model and every vulnerability it has had, and
+# RELEASE-TODO.md records live-server gaps (token state, probe targets, what is
+# and isn't deployed). Useful to us, free reconnaissance for anyone else.
+CODE_AUDIT.md
+RELEASE-TODO.md
+Packaging.md

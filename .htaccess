@@ -1,0 +1,139 @@
+# PayslipCreator-style page routing: ?page=foo → foo.php
+RewriteEngine On
+RewriteCond %{QUERY_STRING} (?:^|&)page=([a-z0-9_-]+)(?:&|$)
+RewriteRule ^$ %1.php? [L]
+
+# Block direct HTTP access to /storage/*. The folder holds:
+#   - storage/outbox/*.eml   ← Mailer fallback when PHP mail() fails.
+#                              Each .eml contains the FULL email body
+#                              including live verify / reset tokens.
+#   - storage/errorlog/*.log ← Frontend JS error reports (IP, URL, stack).
+# Both are written by PHP and read by the operator via FTP; the web has
+# no business in there. Without this rule the files would otherwise be
+# directly fetchable (mod_rewrite's "if file exists, serve it" path
+# below would happily serve a /storage/outbox/foo.eml that exists).
+RewriteRule ^storage(/|$) - [F,L]
+
+# Block the PHP source and config trees outright. Nothing under /src or
+# /config is ever fetched by a browser: the API front controller requires
+# them server-side. Today PHP execution already hides their contents (a
+# `return [...]` file outputs nothing), but that protection evaporates the
+# moment PHP handling is misconfigured: a host migration or an FPM handler
+# swap serves .php as text/plain, and config/oauth.php holds the app
+# secrets. Deny at the URL layer so it never depends on the PHP handler.
+RewriteRule ^(src|config|database)(/|$) - [F,L]
+
+# No directory listings. Nothing in /assets or the source trees should be
+# enumerable.
+#
+# DISABLED by default. An `Options` directive is rejected outright: HTTP 500
+# on *every* request, not just a warning: when the host's AllowOverride does
+# not include Options, and it cannot be guarded with <IfModule> because the
+# failure is a permissions decision, not a missing module. Shared hosting
+# frequently forbids it, and the live site has run without it to date.
+#
+# The protection it buys is small: /assets holds only content-hashed JS and
+# CSS, and /src, /config and /database are already denied outright above.
+#
+# To enable: uncomment the line, upload ONLY this file, and load the site.
+# If you get a 500, re-upload the previous .htaccess to recover immediately.
+# If it works, it keeps working. Alternatively set it server-side in the
+# IONOS panel, where it is not subject to AllowOverride.
+# Options -Indexes
+
+# Root-only landing page for crawlers and signed out visitors.
+# If the request is for "/" AND there is no session cookie AND the visitor
+# did not explicitly ask for the app via ?app=1, serve the static landing
+# HTML. That page has crawlable content for search engines and a Sign in
+# button that bounces real humans into the SPA. Anyone with a session
+# cookie skips the landing page entirely.
+# Group invite links (?join=CODE) bypass landing so the recipient hits the
+# SPA login screen and the join token survives the round-trip into the app.
+RewriteCond %{REQUEST_URI} ^/?$
+RewriteCond %{HTTP_COOKIE} !swiftlift_sid [NC]
+RewriteCond %{QUERY_STRING} !(^|&)app=1(&|$)
+RewriteCond %{QUERY_STRING} !(^|&)verify= [NC]
+RewriteCond %{QUERY_STRING} !(^|&)reset= [NC]
+RewriteCond %{QUERY_STRING} !(^|&)oauth_ [NC]
+RewriteCond %{QUERY_STRING} !(^|&)join= [NC]
+RewriteRule ^ /landing.html [L]
+
+# SPA fallback: route anything that isn't a real file/dir and isn't /api to index.html
+RewriteCond %{REQUEST_URI} ^/api/ [OR]
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+RewriteRule ^ /index.html [L]
+
+# Block direct access to sensitive files
+<FilesMatch "^\.env|composer\.json|composer\.lock|package(-lock)?\.json$">
+  Require all denied
+</FilesMatch>
+
+# ---------------------------------------------------------------------------
+# Security headers
+# ---------------------------------------------------------------------------
+# These cost nothing and close several common attack classes (clickjacking,
+# MIME-sniffing, leaking referrers, drive-by camera/mic access). The CSP is
+# the strict bit: keep allowed origins in sync with what the React bundle
+# actually fetches:
+#   - Carto basemap tiles + OpenStreetMap fallback for the map
+#   - OSRM (router.project-osrm.org) for driving routes
+#   - Nominatim (openstreetmap.org) for address search / reverse geocode
+#   - Google Fonts (fonts.googleapis.com / fonts.gstatic.com)
+# Inline styles are allowed because React writes `style={...}` attributes;
+# inline scripts are NOT allowed: Vite bundles everything into /assets.
+<IfModule mod_headers.c>
+  # Force HTTPS for a year, including subdomains. Safe to send over HTTP too,
+  # browsers ignore HSTS unless the response was actually delivered over HTTPS.
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), payment=(), interest-cohort=(), geolocation=(self)"
+
+  Header always set Content-Security-Policy "default-src 'self'; \
+script-src 'self'; \
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; \
+font-src 'self' https://fonts.gstatic.com; \
+img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://tile.openstreetmap.org; \
+connect-src 'self' https://router.project-osrm.org https://nominatim.openstreetmap.org; \
+frame-ancestors 'none'; \
+base-uri 'self'; \
+form-action 'self' https://www.facebook.com https://accounts.google.com"
+
+  # Don't tell the world what version of PHP / Apache we're running.
+  Header unset X-Powered-By
+  # NOTE: `Header unset Server` does nothing here, Apache generates the
+  # Server header after the header-filter phase, so it can only be
+  # suppressed with ServerTokens in the main server config.
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Caching
+# ---------------------------------------------------------------------------
+# Without explicit headers the browser applies *heuristic* caching (roughly
+# 10% of the file's age) to index.html and sw.js. After a redeploy deletes
+# the previous hashed bundle, a heuristically-cached index.html still asks
+# for /assets/index-OLDHASH.js, gets a 404, and the app renders blank until
+# that cache entry happens to expire. The service worker does not save you:
+# its network-first navigation fetch goes through the same HTTP cache.
+#
+# So: the shell and the worker must always revalidate, and the hashed
+# assets: whose names change on every build: can be cached forever.
+<IfModule mod_headers.c>
+  <FilesMatch "^(index\.html|landing\.html|landing\.js|sw\.js|manifest\.webmanifest)$">
+    Header always set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Scoped by path, not extension: everything under /assets/ carries a
+  # content hash in its filename, so it can never go stale. Matching on
+  # "\.js$" instead would also catch /sw.js and, being the later rule,
+  # would override its no-cache above, pinning the service worker forever.
+  SetEnvIf Request_URI "^/assets/" SWIFTLIFT_IMMUTABLE=1
+  Header always set Cache-Control "public, max-age=31536000, immutable" env=SWIFTLIFT_IMMUTABLE
+</IfModule>
+ServerSignature Off

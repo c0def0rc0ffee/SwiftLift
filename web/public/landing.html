@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+
+  <title>SwiftLift - Guernsey Lift Sharing</title>
+  <meta name="description" content="A free community noticeboard for sharing regular journeys around Guernsey. Match with neighbours on your route, message in the app, share the drive." />
+
+  <link rel="canonical" href="https://swiftlift.gg/" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baumans&family=Red+Hat+Display:wght@400;500;600;700;800;900&display=swap" />
+
+  <meta property="og:type"         content="website" />
+  <meta property="og:site_name"    content="SwiftLift" />
+  <meta property="og:title"        content="SwiftLift - Guernsey Lift Sharing" />
+  <meta property="og:description"  content="A free community noticeboard for sharing regular journeys around Guernsey." />
+  <meta property="og:url"          content="https://swiftlift.gg/" />
+  <meta property="og:image"        content="https://swiftlift.gg/og-image.png" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type"   content="image/png" />
+  <meta property="og:image:alt"    content="SwiftLift: free community lift sharing around Guernsey. Match on your route, message in-app, share the drive." />
+  <meta property="og:locale"       content="en_GB" />
+
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="SwiftLift - Guernsey Lift Sharing" />
+  <meta name="twitter:description" content="A free community noticeboard for sharing regular journeys around Guernsey." />
+  <meta name="twitter:image"       content="https://swiftlift.gg/og-image.png" />
+  <meta name="twitter:image:alt"   content="SwiftLift: free community lift sharing around Guernsey. Match on your route, message in-app, share the drive." />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://swiftlift.gg/#website",
+        "url": "https://swiftlift.gg/",
+        "name": "SwiftLift",
+        "description": "Free community noticeboard for sharing regular journeys around Guernsey.",
+        "inLanguage": "en-GB"
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://swiftlift.gg/#org",
+        "name": "SwiftLift",
+        "url": "https://swiftlift.gg/",
+        "logo": "https://swiftlift.gg/icon-512.png",
+        "areaServed": {
+          "@type": "Place",
+          "name": "Bailiwick of Guernsey"
+        },
+        "email": "hello@swiftlift.gg"
+      },
+      {
+        "@type": "WebApplication",
+        "name": "SwiftLift",
+        "url": "https://swiftlift.gg/",
+        "applicationCategory": "TravelApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Modern browser with JavaScript enabled",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "GBP"
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #1a1a1a;
+      --panel: #242424;
+      --text: #ececec;
+      --muted: #9a9a9a;
+      --accent: #6ec546;
+      --accent-2: #8fd66a;
+      --accent-ink: #0e1a08;
+      --border: #3a3a3a;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: "Red Hat Display", system-ui, sans-serif;
+      line-height: 1.55;
+    }
+    a { color: var(--accent-2); }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+    header.hero { text-align: center; padding-top: 1.5rem; }
+    header.hero .mark {
+      width: 96px; height: 96px; display: inline-block; margin-bottom: 1rem;
+    }
+    header.hero h1 {
+      font-family: "Baumans", system-ui, sans-serif;
+      font-size: 3rem; margin: 0 0 .25rem; font-weight: 400; letter-spacing: .02em;
+      background: linear-gradient(90deg, #ffffff, var(--accent-2));
+      background-clip: text; -webkit-background-clip: text; color: transparent;
+    }
+    header.hero p.tagline {
+      font-size: 1.15rem; color: var(--muted); margin: 0 0 1.5rem;
+    }
+    .cta {
+      display: inline-block; background: var(--accent); color: var(--accent-ink);
+      padding: .85rem 1.6rem; border-radius: 6px; text-decoration: none;
+      font-weight: 700; font-size: 1.05rem;
+    }
+    .cta:hover { filter: brightness(1.08); }
+    .cta.secondary {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .cta-row { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; }
+    section { margin-top: 3rem; }
+    section h2 {
+      font-size: 1.4rem; color: var(--accent-2);
+      border-bottom: 1px solid var(--border); padding-bottom: .35rem; margin-bottom: .85rem;
+    }
+    .steps { list-style: none; padding: 0; counter-reset: step; }
+    .steps li {
+      counter-increment: step;
+      padding: .85rem 0 .85rem 3rem; position: relative;
+      border-bottom: 1px dashed var(--border);
+    }
+    .steps li:last-child { border-bottom: 0; }
+    .steps li::before {
+      content: counter(step);
+      position: absolute; left: 0; top: .8rem;
+      width: 2rem; height: 2rem; border-radius: 50%;
+      background: var(--accent); color: var(--accent-ink);
+      display: grid; place-items: center; font-weight: 700;
+    }
+    .features { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .features { grid-template-columns: 1fr 1fr; } }
+    .features div {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 6px; padding: 1rem;
+    }
+    .features h3 { margin: 0 0 .35rem; color: var(--accent-2); font-size: 1rem; }
+    .features p { margin: 0; color: var(--muted); font-size: .92rem; }
+    footer.foot {
+      margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border);
+      color: var(--muted); font-size: .85rem; text-align: center;
+    }
+    footer.foot a { color: var(--muted); margin: 0 .35rem; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <span class="mark" aria-hidden="true">
+        <img src="/icon.svg" alt="" width="96" height="96" />
+      </span>
+      <h1>SwiftLift</h1>
+      <p class="tagline">Share regular journeys around Guernsey with neighbours on your route.</p>
+      <div class="cta-row">
+        <a class="cta" href="/?app=1">Sign in or create account</a>
+        <a class="cta secondary" href="#how">How it works</a>
+      </div>
+    </header>
+
+    <section id="what">
+      <h2>What SwiftLift is</h2>
+      <p>
+        SwiftLift is a small noticeboard for the Bailiwick of Guernsey. If you make
+        the same drive most weeks (the school run, the commute to St Peter Port, a
+        weekly trip to St Sampson) you can drop your start and end on a map and
+        meet other islanders going the same way at the same time. Nothing flashy.
+        Just neighbours sharing a car.
+      </p>
+      <p>
+        The whole thing is free. No paid lifts, no taxi licence required, no money
+        ever changes hands. Read more on the <a href="/?app=1">Terms page</a> when
+        you sign in.
+      </p>
+    </section>
+
+    <section id="how">
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li>
+          <strong>Drop two pins.</strong> Tap your Start and End on the Guernsey
+          map, pick the days you do that journey, and the time you usually leave.
+        </li>
+        <li>
+          <strong>See your matches.</strong> SwiftLift highlights people whose
+          journeys overlap with yours within a radius and time window you control.
+        </li>
+        <li>
+          <strong>Send a request, chat in the app.</strong> If a match looks
+          right, send a short note. The other side accepts and the two of you
+          message each other inside SwiftLift to sort the details.
+        </li>
+      </ol>
+    </section>
+
+    <section id="features">
+      <h2>What's inside</h2>
+      <div class="features">
+        <div>
+          <h3>Map of Guernsey only</h3>
+          <p>The pin drop area is locked to the island. Sark, Herm and Alderney are visible for context but the matches are local.</p>
+        </div>
+        <div>
+          <h3>Driver or passenger, your call</h3>
+          <p>Mark each journey as offering or requesting. Spare seats, vehicle preferences, away mode, all there.</p>
+        </div>
+        <div>
+          <h3>Private by default</h3>
+          <p>Your email is never shown to other users. Talk in the app, share more if and when you choose.</p>
+        </div>
+        <div>
+          <h3>Works offline as an app</h3>
+          <p>Add SwiftLift to your home screen on iPhone or Android and it opens like any other app.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="who">
+      <h2>Who it's for</h2>
+      <p>
+        Anyone in Guernsey who would rather drive less. Commuters in and out of
+        St Peter Port. Parents on the school run between the parishes. Anyone
+        regularly heading to the Cobo or Vazon side, the Forest, the airport,
+        the harbour. If you make the same trip more than once a week, SwiftLift
+        was built for you.
+      </p>
+    </section>
+
+    <footer class="foot">
+      <a href="/?app=1">Sign in</a>
+      &middot; <a href="/?app=1#terms">Terms</a>
+      &middot; <a href="/?app=1#privacy">Privacy</a>
+      &middot; <a href="mailto:hello@swiftlift.gg">hello@swiftlift.gg</a>
+      <p>&copy; SwiftLift. A small Guernsey project.</p>
+    </footer>
+  </main>
+
+  <script src="/landing.js"></script>
+</body>
+</html>
