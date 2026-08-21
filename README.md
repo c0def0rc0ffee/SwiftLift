@@ -4,7 +4,7 @@ A community lift sharing noticeboard for the Bailiwick of Guernsey. If you
 regularly make the same journey each week (the school run, the commute into
 St Peter Port, a weekly trip across the island), you can drop your start and
 end on the map and meet other islanders heading the same way at similar
-times. No money changes hands. SwiftLift simply puts neighbours in touch.
+times.
 
 Current version: see `src/Version.php` (and the live value in
 `app_meta`, which `update.php` writes).
